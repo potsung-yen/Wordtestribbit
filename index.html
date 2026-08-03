@@ -24,6 +24,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             margin-bottom: 20px;
             text-align: left;
+            position: relative; /* 讓內部絕對定位的兔子能以此為基準 */
         }
         input[type="text"], input[type="number"] {
             padding: 8px 12px;
@@ -120,12 +121,24 @@
         <span id="uploadStatus" style="margin-left: 10px; color: #00b894; font-weight: bold;"></span>
     </div>
 
-    <!-- 遊戲互動主區 -->
-    <div id="gameArea" class="card" style="display:none;">
+    <!-- 遊戲互動主區 (內嵌兔子助手在右上角，絕對不擋下方輸入框) -->
+    <div id="gameArea" class="card" style="display:none; padding-right: 90px;">
+        <!-- 🐰 內嵌在卡片右上角的兔子貼圖 -->
+        <div id="bunnyContainer" style="position: absolute; top: 15px; right: 15px; display: flex; align-items: center; z-index: 10;">
+            <!-- 對話框 (在兔子左側) -->
+            <div id="bunnySpeech" style="background: #fffdf9; border: 2px solid #8b5a2b; border-radius: 12px; padding: 6px 10px; margin-right: 8px; font-size: 13px; font-weight: bold; color: #4a3525; box-shadow: 0 4px 10px rgba(0,0,0,0.15); max-width: 140px; text-align: center; font-family: 'Microsoft JhengHei', sans-serif;">
+                Hello!
+            </div>
+            <!-- 兔子大頭貼 (大小 60px 剛好不佔空間) -->
+            <div id="bunnyAvatar" style="width: 60px; height: 60px; background: #fff; border: 2px solid #8b5a2b; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer; overflow: hidden; transition: transform 0.2s;" onclick="bunnyGreet()">
+                <img id="bunnyImg" src="IMG_2597.png" alt="兔子貼圖" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+        </div>
+
         <h3>當前得分：<span id="score" style="color: #e17055;">0</span> 分</h3>
         
-        <!-- 中文提示與真人發音按鈕 -->
-        <div style="font-size: 24px; margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <!-- 中文提示與發音按鈕 -->
+        <div style="font-size: 24px; margin: 20px 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <span id="chineseHint">中文提示</span>
             <button onclick="speakWord()" style="background-color: #00b894; padding: 6px 14px; font-size: 16px;" title="聽真人發音">🔊 發音</button>
         </div>
@@ -141,7 +154,7 @@
 
         <div id="feedbackMsg" class="feedback"></div>
         
-        <div style="margin-top: 15px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="margin-top: 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
             <label style="cursor: pointer; font-size: 16px;">
                 <input type="checkbox" id="autoNext" checked style="transform: scale(1.2); margin-right: 5px;"> 答對自動跳下一題
             </label>
@@ -161,16 +174,6 @@
                 <button onclick="confirmWordSelection()" style="background-color:#00b894;">確定選取</button>
                 <button onclick="closeWordSelector()" style="background-color:#636e72; margin-left:10px;">取消</button>
             </div>
-        </div>
-    </div>
-
-    <!-- 🐰 兔子貼圖助手 (預設 IMG_2597.png 閉嘴) -->
-    <div id="bunnyContainer" style="position: fixed; bottom: 20px; right: 20px; display: flex; align-items: flex-end; z-index: 999; pointer-events: none;">
-        <div id="bunnySpeech" style="background: #fffdf9; border: 2px solid #8b5a2b; border-radius: 15px; padding: 10px 15px; margin-right: 10px; font-size: 15px; font-weight: bold; color: #4a3525; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 180px; text-align: center; pointer-events: auto; position: relative; font-family: 'Microsoft JhengHei', sans-serif;">
-            Hello! 準備好挑戰了嗎？
-        </div>
-        <div id="bunnyAvatar" style="width: 85px; height: 85px; background: #fff; border: 3px solid #8b5a2b; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); pointer-events: auto; cursor: pointer; overflow: hidden; transition: transform 0.2s;" onclick="bunnyGreet()">
-            <img id="bunnyImg" src="IMG_2597.png" alt="兔子貼圖" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
     </div>
 
