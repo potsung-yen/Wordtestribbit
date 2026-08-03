@@ -124,8 +124,10 @@
     <div id="gameArea" class="card" style="display:none;">
         <h3>當前得分：<span id="score" style="color: #e17055;">0</span> 分</h3>
         
-        <div style="font-size: 24px; margin: 20px 0;">
+        <!-- 中文提示與發音按鈕 -->
+        <div style="font-size: 24px; margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
             <span id="chineseHint">中文提示</span>
+            <button onclick="speakWord()" style="background-color: #00b894; padding: 6px 14px; font-size: 16px;" title="再聽一次發音">🔊 發音</button>
         </div>
 
         <div id="sentenceHint" style="font-size: 16px; color: #636e72; background: #f1f2f6; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none;"></div>
@@ -162,13 +164,13 @@
         </div>
     </div>
 
-    <!-- 🐰 兔子貼圖助手 (直接對應根目錄的 IMG_2596.png) -->
+    <!-- 🐰 兔子貼圖助手 (預設顯示 IMG_2597.png 閉嘴狀態) -->
     <div id="bunnyContainer" style="position: fixed; bottom: 20px; right: 20px; display: flex; align-items: flex-end; z-index: 999; pointer-events: none;">
         <div id="bunnySpeech" style="background: #fffdf9; border: 2px solid #8b5a2b; border-radius: 15px; padding: 10px 15px; margin-right: 10px; font-size: 15px; font-weight: bold; color: #4a3525; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 180px; text-align: center; pointer-events: auto; position: relative; font-family: 'Microsoft JhengHei', sans-serif;">
             Hello! 準備好挑戰了嗎？
         </div>
         <div id="bunnyAvatar" style="width: 85px; height: 85px; background: #fff; border: 3px solid #8b5a2b; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); pointer-events: auto; cursor: pointer; overflow: hidden; transition: transform 0.2s;" onclick="bunnyGreet()">
-            <img id="bunnyImg" src="IMG_2596.png" alt="兔子貼圖" style="width: 100%; height: 100%; object-fit: cover;">
+            <img id="bunnyImg" src="IMG_2597.png" alt="兔子貼圖" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
     </div>
 
@@ -187,4 +189,3 @@
     <script src="game.js"></script>
 </body>
 </html>
-
