@@ -190,6 +190,7 @@ function renderChoiceOptions() {
     });
 }
 
+// 🔊 免費雲端語音 API 發音引擎
 let currentAudio = null;
 
 function speakWord() {
@@ -206,7 +207,7 @@ function speakWord() {
 
     currentAudio = new Audio(audioUrl);
     currentAudio.play().catch(error => {
-        console.log("語音播放異常：", error);
+        console.log("語音播放被瀏覽器阻擋或網路異常：", error);
     });
 }
 
@@ -505,7 +506,7 @@ function confirmWordSelection() {
     }
 }
 
-// 🐰 兔子說話與雙圖切換控制 (對應你上傳的 IMG_2596.png 與 IMG_2597.png)
+// 🐰 兔子說話與雙圖切換控制 (說話時切換為 IMG_2596.png 張嘴，結束恢復 IMG_2597.png 閉嘴)
 function bunnySay(message) {
     const speechBubble = document.getElementById("bunnySpeech");
     const bunnyImg = document.getElementById("bunnyImg");
@@ -516,13 +517,13 @@ function bunnySay(message) {
     }
 
     if (bunnyImg && bunnyAvatar) {
-        // 說話時切換成 IMG_2597.png (張嘴) + 加上跳動動畫
-        bunnyImg.src = "IMG_2597.png";
+        // 說話時切換成 IMG_2596.png (張嘴) + 加上跳動動畫
+        bunnyImg.src = "IMG_2596.png";
         bunnyAvatar.classList.add("bunny-talking");
 
-        // 2.5秒後恢復成 IMG_2596.png (閉嘴) 與靜止狀態
+        // 2.5秒後恢復成 IMG_2597.png (閉嘴) 與靜止狀態
         setTimeout(() => {
-            bunnyImg.src = "IMG_2596.png";
+            bunnyImg.src = "IMG_2597.png";
             bunnyAvatar.classList.remove("bunny-talking");
         }, 2500);
     }
