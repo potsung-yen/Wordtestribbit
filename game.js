@@ -10,9 +10,7 @@ function startGame() {
     updateScoreBoard();
     checkBossAvailable();
     
-    // 🐰 兔子伴隨開局說話
-    bunnySay(`加油啦 ${currentPlayer}！我們一起破關！🥕`);
-    
+    bunnySay(`加油啦 ${currentPlayer}！我們一起破關！`);
     nextQuestion();
 }
 
@@ -70,7 +68,6 @@ function getCombinedWordList() {
     return fullList.slice(start - 1, end);
 }
 
-// 🎯 支援複合詞性與片語自動標示 🎯
 function getDetailedPOS(eng, chi) {
     let cleanEng = eng.toLowerCase().trim();
     let cleanChi = chi.trim();
@@ -193,7 +190,6 @@ function renderChoiceOptions() {
     });
 }
 
-// 🔊 免費雲端語音 API 發音引擎（100% 支援無痕模式、免 API Key）
 let currentAudio = null;
 
 function speakWord() {
@@ -210,7 +206,7 @@ function speakWord() {
 
     currentAudio = new Audio(audioUrl);
     currentAudio.play().catch(error => {
-        console.log("語音播放被瀏覽器阻擋或網路異常：", error);
+        console.log("語音播放異常：", error);
     });
 }
 
@@ -255,8 +251,7 @@ function processResult(userInput, isChoiceMode) {
         feedback.className = "feedback correct";
         playerRecord.score += 10;
         
-        // 🐰 答對時兔子的鼓勵
-        bunnySay("Wonderful! 答對囉！🎉");
+        bunnySay("太棒了！答對囉！🎉");
 
         if (playerRecord.mistakes[correctAnswer]) {
             playerRecord.mistakes[correctAnswer].count -= 1;
@@ -268,8 +263,7 @@ function processResult(userInput, isChoiceMode) {
         feedback.innerText = `❌ 正確單字: ${currentWord.english}`;
         feedback.className = "feedback wrong";
         
-        // 🐰 答錯時兔子的安慰
-        bunnySay("Don't give up! 再試一次！💪");
+        bunnySay("沒關係，再試一次！💪");
 
         if (!playerRecord.mistakes[correctAnswer]) {
             playerRecord.mistakes[correctAnswer] = { ...currentWord, count: 1 };
@@ -335,11 +329,10 @@ function startBossBattle() {
     isBossMode = true;
     bossWordList = Object.values(getPlayerRecord().mistakes);
     alert("⚔️ 魔王戰開始！");
-    bunnySay("小心囉！魔王戰開始！🔥");
+    bunnySay("魔王戰開始！加油！🔥");
     nextQuestion();
 }
 
-// 📥 下載錯題本
 function exportMistakes() {
     let playerRecord = getPlayerRecord();
     let mistakes = Object.values(playerRecord.mistakes);
@@ -430,7 +423,6 @@ function handleFileUpload(event) {
     reader.readAsText(file, "UTF-8");
 }
 
-// === 單字挑選器 Modal 邏輯 ===
 function openWordSelector() {
     const modal = document.getElementById("wordSelectorModal");
     const container = document.getElementById("wordListContainer");
@@ -513,30 +505,36 @@ function confirmWordSelection() {
     }
 }
 
-// 🐰 擬真彼得兔說話控制函數
+// 🐰 兔子說話與雙圖切換控制 (對應你上傳的 IMG_2596.png 與 IMG_2597.png)
 function bunnySay(message) {
     const speechBubble = document.getElementById("bunnySpeech");
+    const bunnyImg = document.getElementById("bunnyImg");
     const bunnyAvatar = document.getElementById("bunnyAvatar");
 
     if (speechBubble) {
         speechBubble.innerText = message;
     }
 
-    if (bunnyAvatar) {
-        bunnyAvatar.classList.add("peter-talking");
+    if (bunnyImg && bunnyAvatar) {
+        // 說話時切換成 IMG_2597.png (張嘴) + 加上跳動動畫
+        bunnyImg.src = "IMG_2597.png";
+        bunnyAvatar.classList.add("bunny-talking");
+
+        // 2.5秒後恢復成 IMG_2596.png (閉嘴) 與靜止狀態
         setTimeout(() => {
-            bunnyAvatar.classList.remove("peter-talking");
+            bunnyImg.src = "IMG_2596.png";
+            bunnyAvatar.classList.remove("bunny-talking");
         }, 2500);
     }
 }
 
-// 點擊兔子時隨機打招呼
+// 點擊兔子時打招呼
 function bunnyGreet() {
     const greetings = [
-        "You are doing wonderfully! 🥕",
-        "Keep up the brilliant work, my friend!",
-        "Let's master these words together! ✨",
-        "Take a deep breath if you need a rest～"
+        "你做得超棒的！繼續加油！",
+        "我是你的拼字小助手！",
+        "今天也要把單字全部答對喔！",
+        "累了的話要記得休息一下喔～"
     ];
     let randomMsg = greetings[Math.floor(Math.random() * greetings.length)];
     bunnySay(randomMsg);
