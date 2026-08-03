@@ -190,25 +190,42 @@ function renderChoiceOptions() {
     });
 }
 
-// 🔊 免費雲端語音 API 發音引擎
-let currentAudio = null;
-
+// 🎙️ 高品質真人語音引擎（自動挑選手機內建自然人聲）
 function speakWord() {
     let textToSpeak = currentWord.english.replace(/^(a |an |the |to )/i, '').replace(/\([^)]*\)/g, '').trim();
     if (!textToSpeak) return;
 
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // 停止先前的發音
+
+        let utterance = new SpeechSynthesisUtterance(textToSpeak);
+        utterance.lang = 'en-US'; // 英文
+        utterance.rate = 0.85;    // 稍微調慢，適合學習發音
+        utterance.pitch = 1.0;    // 自然音高
+
+        // 嘗試取得手機內建的高品質真人語音
+        let voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+            let preferredVoice = voices.find(v => v.lang === 'en-US' && (v.name.includes('Natural') || v.name.includes('Siri') || v.name.includes('Google') || v.name.includes('Samantha')));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            } else {
+                let enVoice = voices.find(v => v.lang === 'en-US' || v.lang.startsWith('en'));
+                if (enVoice) utterance.voice = enVoice;
+            }
+        }
+
+        window.speechSynthesis.speak(utterance);
+    } else {
+        alert("您的瀏覽器不支援語音功能");
     }
+}
 
-    const encodedText = encodeURIComponent(textToSpeak);
-    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=en&client=tw-ob`;
-
-    currentAudio = new Audio(audioUrl);
-    currentAudio.play().catch(error => {
-        console.log("語音播放被瀏覽器阻擋或網路異常：", error);
-    });
+// 確保頁面載入時能順利抓取手機的語音清單
+if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = function() {
+        window.speechSynthesis.getVoices();
+    };
 }
 
 function checkAnswer() {
@@ -517,11 +534,9 @@ function bunnySay(message) {
     }
 
     if (bunnyImg && bunnyAvatar) {
-        // 說話時切換成 IMG_2596.png (張嘴) + 加上跳動動畫
         bunnyImg.src = "IMG_2596.png";
         bunnyAvatar.classList.add("bunny-talking");
 
-        // 2.5秒後恢復成 IMG_2597.png (閉嘴) 與靜止狀態
         setTimeout(() => {
             bunnyImg.src = "IMG_2597.png";
             bunnyAvatar.classList.remove("bunny-talking");
@@ -540,4 +555,3 @@ function bunnyGreet() {
     let randomMsg = greetings[Math.floor(Math.random() * greetings.length)];
     bunnySay(randomMsg);
 }
-
